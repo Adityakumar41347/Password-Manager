@@ -21,7 +21,7 @@ const Manager = () => {
          
         if (ref.current.src.includes("close.png")) {
             ref.current.src = "open.png"
-            passwordref.current.type="text"
+            passwordref.current.type="password"
         }
         else {
             ref.current.src = "close.png"
@@ -38,6 +38,12 @@ const Manager = () => {
         console.log(e.target.name)
         setform({ ...form, [e.target.name]: e.target.value })
     }
+    const copytext=(text) => {
+        alert("copy to clipbord")
+        navigator.clipboard.writeText(text)
+      
+    }
+    
 
 
     return (
@@ -87,9 +93,9 @@ const Manager = () => {
                         <tbody className='bg-green-100'>
                             {passwordArray.map((item,index) => {
                                 return <tr key={index}>
-                                    <td className='py-2 border border-white text-center w-32'><a href="item.site" target='_blank'>{item.site}</a></td>
-                                    <td className='py-2 border border-white text-center w-32'>{item.username}</td>
-                                    <td className='py-2 border border-white text-center w-32'>{item.password}</td>
+                                    <td className='py-2 border border-white text-center  w-32'><div className='flex w-full justify-between'><a className='px-4' href="item.site" target='_blank'>{item.site}</a><img className='px-4 cursor-pointer' onClick={()=>{copytext(item.site)}} src="copy2.png" alt="" /></div></td>
+                                    <td className='py-2 border border-white text-center w-32'><div className='flex w-full justify-between px-4'><div>{item.username}</div><img  className='px-4 cursor-pointer' onClick={()=>{copytext(item.username)}} src="copy2.png"  alt="" /></div></td>
+                                    <td className='py-2 border border-white text-center w-32'><div className='flex w-full justify-between px-4'><div>{item.password}</div><img className='px-4 cursor-pointer' onClick={()=>{copytext(item.password)}} src="copy2.png"  alt="" /></div></td>
                                 </tr>
                             })}
 
