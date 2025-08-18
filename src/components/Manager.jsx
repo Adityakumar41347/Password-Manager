@@ -1,9 +1,13 @@
 import React, { useLayoutEffect } from 'react'
 import { useEffect, useRef, useState } from 'react';
+import { v4 as uuidv4 } from 'uuid';
+
+
+import { ToastContainer, toast } from 'react-toastify';
 
 const Manager = () => {
     const ref = useRef()
-    const passwordref=useRef()
+    const passwordref = useRef()
     const [form, setform] = useState({ site: "", username: "", password: "" })
     const [passwordArray, setpasswordArray] = useState([])
     useEffect(() => {
@@ -18,36 +22,63 @@ const Manager = () => {
     }, [])
 
     const showpass = (e) => {
-         
+
         if (ref.current.src.includes("close.png")) {
             ref.current.src = "open.png"
-            passwordref.current.type="password"
+            passwordref.current.type = "password"
         }
         else {
             ref.current.src = "close.png"
-            passwordref.current.type="text"
+            passwordref.current.type = "text"
         }
     }
     const savepassword = (e) => {
 
-        setpasswordArray([...passwordArray, form]);
-        localStorage.setItem("passwords", JSON.stringify([...passwordArray, form]))
-        console.log([...passwordArray, form])
+        setpasswordArray([...passwordArray, {...form,id:uuidv4()}]);
+        localStorage.setItem("passwords", JSON.stringify([...passwordArray, {...form,id:uuidv4()}]))
+        
     }
+    const deletepassword = (id) => {
+
+
+        setpasswordArray(passwordArray.filter(item=>item.id!=id));
+        localStorage.setItem("passwords", JSON.stringify(passwordArray.filter(item=>item.id!=id)))
+        
+    }
+    const editpassword=(id) => {
+      setform(passwordArray.filter(item=>item.id===id)[0])
+      setpasswordArray(passwordArray.filter(item=>item.id!=id));
+        localStorage.setItem("passwords", JSON.stringify(passwordArray.filter(item=>item.id!=id)))
+    }
+    
     const handlechange = (e) => {
         console.log(e.target.name)
         setform({ ...form, [e.target.name]: e.target.value })
     }
-    const copytext=(text) => {
-        alert("copy to clipbord")
+    const copytext = (text) => {
+        
         navigator.clipboard.writeText(text)
-      
+
     }
-    
+
 
 
     return (
         <>
+            <ToastContainer
+                position="top-right"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick={false}
+                rtl={false}
+                pauseOnFocusLoss
+                draggablenpm
+
+                pauseOnHover
+                theme="light"
+                
+            />
             <div className="absolute top-0 z-[-2] h-screen w-screen rotate-180 transform bg-white bg-[radial-gradient(60%_120%_at_50%_50%,hsla(0,0%,100%,0)_0,rgba(252,205,238,.5)_100%)]"></div>
             <div className="   mycontainer">
                 <h1 className='text-4xl font-bold text-center'><span className='text-green-500'>
@@ -88,14 +119,16 @@ const Manager = () => {
                                 <th className='p-3'>Sites</th>
                                 <th className='p-3'>Usernames</th>
                                 <th className='p-3'>Passwords</th>
+                                <th className='p-3'>Actions</th>
                             </tr>
                         </thead>
                         <tbody className='bg-green-100'>
-                            {passwordArray.map((item,index) => {
+                            {passwordArray.map((item, index) => {
                                 return <tr key={index}>
-                                    <td className='py-2 border border-white text-center  w-32'><div className='flex w-full justify-between'><a className='px-4' href="item.site" target='_blank'>{item.site}</a><img className='px-4 cursor-pointer' onClick={()=>{copytext(item.site)}} src="copy2.png" alt="" /></div></td>
-                                    <td className='py-2 border border-white text-center w-32'><div className='flex w-full justify-between px-4'><div>{item.username}</div><img  className='px-4 cursor-pointer' onClick={()=>{copytext(item.username)}} src="copy2.png"  alt="" /></div></td>
-                                    <td className='py-2 border border-white text-center w-32'><div className='flex w-full justify-between px-4'><div>{item.password}</div><img className='px-4 cursor-pointer' onClick={()=>{copytext(item.password)}} src="copy2.png"  alt="" /></div></td>
+                                    <td className='py-2 border border-white text-center  w-32'><div className='flex w-full justify-between'><a className='px-4' href="item.site" target='_blank'>{item.site}</a><img className='px-4 cursor-pointer' onClick={() => { copytext(item.site) }} src="copy2.png" alt="" /></div></td>
+                                    <td className='py-2 border border-white text-center w-32'><div className='flex w-full justify-between px-4'><div>{item.username}</div><img className='px-4 cursor-pointer' onClick={() => { copytext(item.username) }} src="copy2.png" alt="" /></div></td>
+                                    <td className='py-2 border border-white text-center w-32'><div className='flex w-full justify-between px-4'><div>{item.password}</div><img className='px-4 cursor-pointer' onClick={() => { copytext(item.password) }} src="copy2.png" alt="" /></div></td>
+                                    <td className='py-2 border border-white text-center w-32'><div className='flex w-full justify-center items-baseline gap-5 px-4'> <span onClick={()=>{editpassword(item.id)}}><img className='w-8' src="edit.png" alt="" /></span><span onClick={()=>{deletepassword(item.id)}}><img src="delete.png" alt="" /></span></div></td>
                                 </tr>
                             })}
 
@@ -104,7 +137,7 @@ const Manager = () => {
                 </div>
 
             </div>
-            
+
         </>
     )
 }

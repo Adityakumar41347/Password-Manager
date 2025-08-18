@@ -13,8 +13,8 @@ const Navbar = () => {
           <span className='text-green-500'>Op/&gt;</span>
         </div>
         
-        <button className='flex text-white bg-green-800 my-5 rounded-full justify-between items-center'>
-          <img className='invert w-10 p-1' src="github.png" alt="github" />
+        <button className='flex text-white bg-green-800 my-5 rounded-full justify-between items-center ring-white ring-1'>
+          <img className=' w-10 p-1' src="github.png" alt="github" />
           <div className='font-bold px-2'>Github</div>
         </button>
  
