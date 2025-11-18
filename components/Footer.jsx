@@ -13,7 +13,7 @@ const Footer = () => {
                     <span className='text-green-500'>Op/&gt;</span>
                 </div>
             </div>
-            <div className='flex text-white text-xl'>Created with  <img className='w-5 mix-blend-multiply' src="heart.gif" alt="" /> by Aditya</div>
+            <div className='flex text-white text-xl'>Created with  <img className='w-5 mix-blend-multiply' src="heart.gif" alt="" /> </div>
 
         </div>
     )

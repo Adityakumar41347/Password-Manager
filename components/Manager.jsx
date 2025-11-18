@@ -94,28 +94,38 @@ const Manager = () => {
             });
         }
     };
-    const deletepassword = (id) => {
-        toast('🦄 password deleted!', {
-            position: "top-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: false,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "light",
+    const deletepassword = async (passwordId) => {
+        try {
+            const res = await fetch('/api/passwords/delete', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    email: session?.user?.email, // from NextAuth
+                    passwordId,
+                }),
+            });
 
-        });
+            if (!res.ok) throw new Error('Failed to delete password');
 
-        setpasswordArray(passwordArray.filter(item => item.id != id));
-        localStorage.setItem("passwords", JSON.stringify(passwordArray.filter(item => item.id != id)))
+            toast('🦄 password deleted!', {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: false,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+            });
 
-    }
-    const editpassword = (id) => {
-        setform(passwordArray.filter(item => item.id === id)[0])
-        setpasswordArray(passwordArray.filter(item => item.id != id));
-        localStorage.setItem("passwords", JSON.stringify(passwordArray.filter(item => item.id != id)))
-    }
+            const updated = passwordArray.filter(item => item.id !== passwordId);
+            setpasswordArray(updated);
+
+        } catch (err) {
+            toast.error('❌ Failed to delete password');
+            console.error(err);
+        }
+    };
 
     const handlechange = (e) => {
         console.log(e.target.name)
@@ -156,7 +166,7 @@ const Manager = () => {
                 theme="light"
             />
             <div className="absolute top-0 left-0 z-[-2] h-screen w-full overflow-hidden rotate-180 transform   from-white via-[#CFFFE1] to-[#1E293B]"></div>
-            <div className="md:mycontainer px-4 py-6">
+            <div className="md:mycontainer  px-4 py-6">
                 <h1 className='text-5xl font-extrabold text-center tracking-tight'>
                     <span className='text-[#00C896]'>&lt;</span>
                     <span className='text-slate-800'>Pass</span>
